@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Michael's List</title>
+    <link rel="form" href="/list-form.html" />
+  </head>
+  <body>
+    <ol data-id="christmas-items">
+      <li>Foo</li>
+      <li>Foo</li>
+    </ol>
+
+    <div id="form-edit"></div>
+
+    <script type="text/javascript">
+      fetch("/list-form.html").then((res) => {
+        res.text().then((text) => {
+          document.querySelector("#form-edit").replaceChildren(new DOMParser()
+            .parseFromString(text, "text/html")
+            .querySelector("form"));
+        });
+      });
+    </script>
+  </body>
+</html>
