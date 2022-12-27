@@ -2,13 +2,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Christmas List</title>
+    <script src="https://unpkg.com/htmx.org@1.8.4"
+            integrity="sha384-wg5Y/JwF7VxGk4zLsJEcAojRtlVp1FKKdGy1qN+OMtdq72WRvX/EdRdqg/LOhYeV"
+            crossorigin="anonymous"></script>
 </head>
-<body>
+<body hx-boost="true">
 <h1 th:text="${list.getName()}"></h1>
 <section th:object="${list}" th:fragment="christmas-list" action="/christmas-list" method="post">
     <ul>
         <li th:each="item : *{items}">
             <span th:text="${item.description}"></span>
+            <button
+                    hx-target="body"
+                    th:attr="hx-delete=${'/christmas-list/' + list.getId() + '/items/' + item.getId()}"
+                    >
+                Delete
+            </button>
         </li>
         <li>
             <form th:action="${'/christmas-list/' + list.getId() + '/items'}" method="post">

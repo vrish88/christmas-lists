@@ -10,9 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -62,6 +60,16 @@ public class DemoApplication {
 			repo.save(list);
 
 			return "redirect:/christmas-list/" + list.getId();
+		}
+		@DeleteMapping("/christmas-list/{listId}/items/{itemId}")
+		public ModelAndView removeListItem(@PathVariable("listId") Long listId, @PathVariable("itemId") Long itemId) {
+			ChristmasList list = repo.findById(listId).get();
+			list.getItems().removeIf(i -> i.getId().equals(itemId));
+			repo.save(list);
+
+			ModelAndView mv = new ModelAndView("christmas-list-show");
+			mv.addObject("list", list);
+			return mv;
 		}
 		@PostMapping("/christmas-list")
 		public String createChristmasList(ChristmasList list) {
