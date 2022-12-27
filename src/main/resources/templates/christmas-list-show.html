@@ -1,0 +1,26 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Christmas List</title>
+</head>
+<body>
+<h1 th:text="${list.getName()}"></h1>
+<section th:object="${list}" th:fragment="christmas-list" action="/christmas-list" method="post">
+    <ul>
+        <li th:each="item : *{items}">
+            <span th:text="${item.description}"></span>
+        </li>
+        <li>
+            <form th:action="${'/christmas-list/' + list.getId() + '/items'}" method="post">
+                <label>
+                    New Item
+                    <input type="text" name="description"/>
+                </label>
+                <input type="submit" value="Submit">
+            </form>
+        </li>
+    </ul>
+
+</section>
+</body>
+</html>
