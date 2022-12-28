@@ -1,17 +1,26 @@
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <script src="https://unpkg.com/htmx.org@1.8.4"
             integrity="sha384-wg5Y/JwF7VxGk4zLsJEcAojRtlVp1FKKdGy1qN+OMtdq72WRvX/EdRdqg/LOhYeV"
             crossorigin="anonymous"></script>
 </head>
-<body>
-<h1>Create a Christmas List</h1>
+<body hx-boost="true">
+<h1>Christmas Lists</h1>
+<h2>Create one</h2>
 <form action="/christmas-list" method="post">
     <label>
-        Name: <input type="text" name="name">
+        Your Name: <input type="text" name="name">
     </label>
 
     <input type="submit">
 </form>
+
+<h2>Look at one</h2>
+
+<ul>
+    <li th:each="list : ${lists}">
+        <a th:href="${'/christmas-list/' + list.getId()}" th:text="${list.getName()}"></a>
+    </li>
+</ul>
 </body>
 </html>

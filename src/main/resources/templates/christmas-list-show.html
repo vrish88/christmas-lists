@@ -8,6 +8,7 @@
 </head>
 <body hx-boost="true">
 <h1 th:text="${list.getName()}"></h1>
+<a href="/">back</a>
 <section th:object="${list}" th:fragment="christmas-list" action="/christmas-list" method="post">
     <ul>
         <li th:each="item : *{items}">
