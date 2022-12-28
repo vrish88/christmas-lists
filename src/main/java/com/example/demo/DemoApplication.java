@@ -27,64 +27,64 @@ public class DemoApplication {
     }
 
     @Bean
-    public ApplicationRunner runner(ChristmasListRepo repo) {
+    public ApplicationRunner runner(PersonRepo repo) {
         return (args -> {
-            ChristmasList list = new ChristmasList();
-            list.setName("FIRST!");
+            Person person = new Person();
+            person.setName("FIRST!");
 
-            repo.save(list);
+            repo.save(person);
         });
     }
 
     @Controller
-    static class ChristmasListController {
-        private final ChristmasListRepo repo;
+    static class PersonController {
+        private final PersonRepo repo;
 
-        ChristmasListController(ChristmasListRepo repo) {
+        PersonController(PersonRepo repo) {
             this.repo = repo;
         }
 
         @GetMapping("/")
         public ModelAndView index() {
             ModelAndView mv = new ModelAndView("index");
-            mv.addObject("lists", repo.findAll());
+            mv.addObject("persons", repo.findAll());
             return mv;
         }
 
-        @PostMapping("/christmas-list/{listId}/items")
-        public String createItemInList(@PathVariable("listId") Long listId, Item item) {
-            ChristmasList list = repo.findById(listId).get();
-            ArrayList<Item> items = new ArrayList<>(list.getItems());
+        @PostMapping("/person/{personId}/items")
+        public String createItemInList(@PathVariable("personId") Long personId, Item item) {
+            Person person = repo.findById(personId).get();
+            ArrayList<Item> items = new ArrayList<>(person.getItems());
             items.add(item);
-            list.setItems(items);
-            repo.save(list);
+            person.setItems(items);
+            repo.save(person);
 
-            return "redirect:/christmas-list/" + list.getId();
+            return "redirect:/person/" + person.getId();
         }
 
-        @DeleteMapping("/christmas-list/{listId}/items/{itemId}")
-        public ModelAndView removeListItem(@PathVariable("listId") Long listId, @PathVariable("itemId") Long itemId) {
-            ChristmasList list = repo.findById(listId).get();
-            list.getItems().removeIf(i -> i.getId().equals(itemId));
-            repo.save(list);
+        @DeleteMapping("/person/{personId}/items/{itemId}")
+        public ModelAndView removeListItem(@PathVariable("personId") Long personId, @PathVariable("itemId") Long itemId) {
+            Person person = repo.findById(personId).get();
+            person.getItems().removeIf(i -> i.getId().equals(itemId));
+            repo.save(person);
 
-            ModelAndView mv = new ModelAndView("christmas-list-show");
-            mv.addObject("list", list);
+            ModelAndView mv = new ModelAndView("person-show");
+            mv.addObject("person", person);
             return mv;
         }
 
-        @PostMapping("/christmas-list")
-        public String createChristmasList(ChristmasList list) {
-            repo.save(list);
-            return "redirect:/christmas-list/" + list.getId();
+        @PostMapping("/person")
+        public String createPerson(Person person) {
+            repo.save(person);
+            return "redirect:/person/" + person.getId();
         }
 
-        @GetMapping("/christmas-list/{id}")
-        public String getChristmasList(@PathVariable("id") Long id, Model model) {
-            Optional<ChristmasList> byId = repo.findById(id);
+        @GetMapping("/person/{id}")
+        public String getPerson(@PathVariable("id") Long id, Model model) {
+            Optional<Person> byId = repo.findById(id);
 
-            model.addAttribute("list", byId.get());
-            return "christmas-list-show";
+            model.addAttribute("person", byId.get());
+            return "person-show";
         }
     }
 
@@ -92,7 +92,7 @@ public class DemoApplication {
     @Setter
     @ToString
     @Entity
-    public static class ChristmasList {
+    public static class Person {
         @Id
         @GeneratedValue()
         Long id;
@@ -102,7 +102,7 @@ public class DemoApplication {
         @OneToMany(cascade = CascadeType.ALL)
         List<Item> items;
 
-        public ChristmasList() {
+        public Person() {
             id = null;
             items = new ArrayList<>();
             name = "";
