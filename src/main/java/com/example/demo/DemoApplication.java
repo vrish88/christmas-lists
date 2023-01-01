@@ -29,10 +29,15 @@ public class DemoApplication {
     @Bean
     public ApplicationRunner runner(PersonRepo repo) {
         return (args -> {
-            Person person = new Person();
-            person.setName("FIRST!");
+            Person steven = new Person();
+            steven.setName("Steven");
+            steven.setBuyingFor("Jo");
+            repo.save(steven);
 
-            repo.save(person);
+            Person jo = new Person();
+            jo.setName("Jo");
+            jo.setBuyingFor("Steven");
+            repo.save(jo);
         });
     }
 
@@ -98,6 +103,8 @@ public class DemoApplication {
         Long id;
 
         String name;
+
+        String buyingFor;
 
         @OneToMany(cascade = CascadeType.ALL)
         List<Item> items;

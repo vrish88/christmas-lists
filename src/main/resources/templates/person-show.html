@@ -7,9 +7,10 @@
             crossorigin="anonymous"></script>
 </head>
 <body hx-boost="true">
-<h1 th:text="${person.getName()}"></h1>
 <a href="/">back</a>
 <section th:object="${person}">
+    <h1 th:text="*{getName()}"></h1>
+    <p th:text="*{'is buying a present for ' + getBuyingFor()}"></p>
     <ul>
         <li th:each="item : *{items}">
             <span th:text="${item.description}"></span>
@@ -23,7 +24,7 @@
         <li>
             <form th:action="${'/person/' + person.getId() + '/items'}" method="post">
                 <label>
-                    New Item
+                    New Item:
                     <input type="text" name="description"/>
                 </label>
                 <input type="submit" value="Submit">

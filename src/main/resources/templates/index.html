@@ -8,11 +8,24 @@
 <h1>Christmas Lists</h1>
 <h2>Create one</h2>
 <form action="/person" method="post">
-    <label>
-        Your Name: <input type="text" name="name">
-    </label>
+    <fieldset>
+        <label>
+            Your Name: <input type="text" name="name">
+        </label>
+    </fieldset>
 
-    <input type="submit">
+    <fieldset>
+        <label>
+            I am buying for:
+
+            <input list="persons" name="buyingFor">
+            <datalist id="persons">
+                <option th:each="person : ${persons}" th:value="${person.getName()}" th:text="${person.getName()}"></option>
+            </datalist>
+        </label>
+    </fieldset>
+
+    <input type="submit" value="Create">
 </form>
 
 <h2>Look at one</h2>
