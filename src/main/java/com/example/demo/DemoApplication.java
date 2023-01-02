@@ -29,12 +29,12 @@ public class DemoApplication {
     @Bean
     public ApplicationRunner runner(PersonRepo repo) {
         return (args -> {
-            Person steven = new Person();
+            PersonEntity steven = new PersonEntity();
             steven.setName("Steven");
             steven.setBuyingFor("Jo");
             repo.save(steven);
 
-            Person jo = new Person();
+            PersonEntity jo = new PersonEntity();
             jo.setName("Jo");
             jo.setBuyingFor("Steven");
             repo.save(jo);
@@ -57,36 +57,36 @@ public class DemoApplication {
         }
 
         @PostMapping("/person/{personId}/items")
-        public String createItemInList(@PathVariable("personId") Long personId, Item item) {
-            Person person = repo.findById(personId).get();
-            ArrayList<Item> items = new ArrayList<>(person.getItems());
-            items.add(item);
-            person.setItems(items);
-            repo.save(person);
+        public String createItemInList(@PathVariable("personId") Long personId, ItemEntity itemEntity) {
+            PersonEntity personEntity = repo.findById(personId).get();
+            ArrayList<ItemEntity> items = new ArrayList<>(personEntity.getItems());
+            items.add(itemEntity);
+            personEntity.setItems(items);
+            repo.save(personEntity);
 
-            return "redirect:/person/" + person.getId();
+            return "redirect:/person/" + personEntity.getId();
         }
 
         @DeleteMapping("/person/{personId}/items/{itemId}")
         public ModelAndView removeListItem(@PathVariable("personId") Long personId, @PathVariable("itemId") Long itemId) {
-            Person person = repo.findById(personId).get();
-            person.getItems().removeIf(i -> i.getId().equals(itemId));
-            repo.save(person);
+            PersonEntity personEntity = repo.findById(personId).get();
+            personEntity.getItems().removeIf(i -> i.getId().equals(itemId));
+            repo.save(personEntity);
 
             ModelAndView mv = new ModelAndView("person-show");
-            mv.addObject("person", person);
+            mv.addObject("person", personEntity);
             return mv;
         }
 
         @PostMapping("/person")
-        public String createPerson(Person person) {
-            repo.save(person);
-            return "redirect:/person/" + person.getId();
+        public String createPerson(PersonEntity personEntity) {
+            repo.save(personEntity);
+            return "redirect:/person/" + personEntity.getId();
         }
 
         @GetMapping("/person/{id}")
         public String getPerson(@PathVariable("id") Long id, Model model) {
-            Optional<Person> byId = repo.findById(id);
+            Optional<PersonEntity> byId = repo.findById(id);
 
             model.addAttribute("person", byId.get());
             return "person-show";
@@ -97,7 +97,7 @@ public class DemoApplication {
     @Setter
     @ToString
     @Entity
-    public static class Person {
+    public static class PersonEntity {
         @Id
         @GeneratedValue()
         Long id;
@@ -107,9 +107,9 @@ public class DemoApplication {
         String buyingFor;
 
         @OneToMany(cascade = CascadeType.ALL)
-        List<Item> items;
+        List<ItemEntity> items;
 
-        public Person() {
+        public PersonEntity() {
             id = null;
             items = new ArrayList<>();
             name = "";
@@ -120,13 +120,13 @@ public class DemoApplication {
     @Setter
     @ToString
     @Entity
-    public static class Item {
+    public static class ItemEntity {
         @Id
         @GeneratedValue
         Long id;
         String description;
 
-        public Item() {
+        public ItemEntity() {
             id = null;
             description = "";
         }
