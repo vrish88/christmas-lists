@@ -3,31 +3,13 @@
     <script src="https://unpkg.com/htmx.org@1.8.4"
             integrity="sha384-wg5Y/JwF7VxGk4zLsJEcAojRtlVp1FKKdGy1qN+OMtdq72WRvX/EdRdqg/LOhYeV"
             crossorigin="anonymous"></script>
+
 </head>
 <body hx-boost="true">
 <h1>Christmas Lists</h1>
 <h2>Create one</h2>
-<form action="/person" method="post">
-    <fieldset>
-        <label>
-            Your Name: <input type="text" name="name">
-        </label>
-    </fieldset>
-
-    <fieldset>
-        <label>
-            I am buying for:
-
-            <input list="persons" name="buyingFor">
-            <datalist id="persons">
-                <option th:each="person : ${persons}" th:value="${person.getName()}" th:text="${person.getName()}"></option>
-            </datalist>
-        </label>
-    </fieldset>
-
-    <input type="submit" value="Create">
-</form>
-
+<div class="error-msg"></div>
+<div th:replace="~{person-form}"></div>
 <h2>Look at one</h2>
 
 <ul>
@@ -35,5 +17,23 @@
         <a th:href="${'/person/' + person.getId()}" th:text="${person.getName()}"></a>
     </li>
 </ul>
+<script type="application/javascript">
+    document.body.addEventListener("htmx:beforeSwap", evt => {
+        if(evt.detail.xhr.status === 422) {
+            // allow 422 responses to swap as we are using this as a signal that
+            // a form was submitted with bad data and want to rerender with the
+            // errors
+            //
+            // set isError to false to avoid error logging in console
+            evt.detail.shouldSwap = true;
+            evt.detail.isError = false;
+        }
+    });
+    document.body.addEventListener("htmx:responseError", evt => {
+        const div = document.createElement("div");
+        div.textContent = "An error occurred submitting the form";
+        evt.detail.elt.prepend(div);
+    });
+</script>
 </body>
 </html>

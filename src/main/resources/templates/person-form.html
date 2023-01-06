@@ -1,0 +1,23 @@
+<form action="/person" hx-post="/person" th:object="${personForm}" hx-swap="outerHTML" hx-target="this">
+    <fieldset>
+        <label>
+            Your Name: <input type="text" name="name" th:field="*{name}">
+            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+        </label>
+    </fieldset>
+
+    <fieldset>
+        <label>
+            I am buying for:
+
+            <input list="persons" name="buyingFor" th:field="*{buyingFor}">
+            <p th:if="${#fields.hasErrors('buyingFor')}" th:errors="*{buyingFor}"></p>
+            <datalist id="persons">
+                <option th:each="person : ${persons}" th:value="${person.getName()}"
+                        th:text="${person.getName()}"></option>
+            </datalist>
+        </label>
+    </fieldset>
+
+    <input type="submit" value="Create">
+</form>
