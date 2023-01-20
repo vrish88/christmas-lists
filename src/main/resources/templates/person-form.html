@@ -1,16 +1,23 @@
-<form action="/person" hx-post="/person" th:object="${personForm}" hx-swap="outerHTML" hx-target="this">
+<form action="/person" hx-post="/person" th:object="${personForm}" hx-swap="outerHTML" hx-target="this"
+      class="text-sm font-medium text-gray-700">
+    <div class="flex flex-col w-96 pb-3 justify-around">
     <fieldset>
-        <label>
-            Your Name: <input type="text" name="name" th:field="*{name}">
+        <label class="block relative mt-1 rounded-md shadow-sm">
+            Your Name:
+            <input type="text"
+                   class="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                   name="name"
+                   th:field="*{name}">
             <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
         </label>
     </fieldset>
 
     <fieldset>
-        <label>
+        <label class="block relative mt-1 rounded-md shadow-sm">
             I am buying for:
 
-            <input list="persons" name="buyingFor" th:field="*{buyingFor}">
+            <input type="text" list="persons" name="buyingFor" th:field="*{buyingFor}"
+                   class="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
             <p th:if="${#fields.hasErrors('buyingFor')}" th:errors="*{buyingFor}"></p>
             <datalist id="persons">
                 <option th:each="person : ${persons}" th:value="${person.getName()}"
@@ -18,6 +25,6 @@
             </datalist>
         </label>
     </fieldset>
-
-    <input type="submit" value="Create">
+    </div>
+    <button class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white" type="submit">Create</button>
 </form>

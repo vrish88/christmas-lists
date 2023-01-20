@@ -5,8 +5,11 @@
     <script src="https://unpkg.com/htmx.org@1.8.4"
             integrity="sha384-wg5Y/JwF7VxGk4zLsJEcAojRtlVp1FKKdGy1qN+OMtdq72WRvX/EdRdqg/LOhYeV"
             crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body hx-boost="true">
+<body style="margin: 0 auto; width: 1000px" hx-boost="true"
+      class="container prose prose-img:rounded-xl prose-headings prose-a:text-blue-600 ">
 <a href="/">back</a>
 <section th:object="${person}">
     <h1 th:text="*{getName()}"></h1>
@@ -16,8 +19,9 @@
             <span th:text="${item.description}"></span>
             <button
                     hx-target="body"
+                    class="text-red-300 hover:text-red-500 px-2 py-1 text-sm rounded-full font-semibold"
                     th:attr="hx-delete=${'/person/' + person.getId() + '/items/' + item.getId()}"
-                    >
+            >
                 Delete
             </button>
         </li>
@@ -25,9 +29,11 @@
             <form th:action="${'/person/' + person.getId() + '/items'}" method="post">
                 <label>
                     New Item:
-                    <input type="text" name="description"/>
+                    <input type="text" name="description"
+                           class="rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"/>
                 </label>
-                <input type="submit" value="Submit">
+                <input class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+                       type="submit" value="Submit">
             </form>
         </li>
     </ul>
