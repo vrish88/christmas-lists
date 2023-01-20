@@ -1,28 +1,18 @@
-<html th:replace="~{layout :: layout (~{::title}, ~{::main})}" lang="en" xmlns:th="http://www.thymeleaf.org">
+<html th:fragment="layout (title, content)" lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Christmas Lists</title>
+    <title th:replace="${title}"></title>
     <meta name="csrfTokenName" th:content="${_csrf.getHeaderName()}"/>
     <meta name="csrfTokenValue" th:content="${_csrf.getToken()}"/>
     <script src="https://unpkg.com/htmx.org@1.8.4"
             integrity="sha384-wg5Y/JwF7VxGk4zLsJEcAojRtlVp1FKKdGy1qN+OMtdq72WRvX/EdRdqg/LOhYeV"
             crossorigin="anonymous"></script>
-
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body hx-boost="true">
-<main>
-<h1>Christmas Lists</h1>
-<h2>Create one</h2>
-<div class="error-msg"></div>
-<div th:replace="~{person-form}"></div>
-<h2>Look at one</h2>
-
-<ul>
-    <li th:each="person : ${persons}">
-        <a th:href="${'/person/' + person.getId()}" th:text="${person.getName()}"></a>
-    </li>
-</ul>
+<body style="margin: 0 auto; width: 1000px" hx-boost="true"
+            class="container prose prose-img:rounded-xl prose-headings prose-a:text-blue-600 ">
+<main th:insert="${content}">
 </main>
-
 <script type="application/javascript">
     const csrfHeaderName = document.querySelector("[name='csrfTokenName']").content;
     const csrfToken = document.querySelector("[name='csrfTokenValue']").content;
