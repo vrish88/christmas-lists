@@ -1,7 +1,6 @@
 package com.example.demo;
 
 import jakarta.persistence.*;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -10,11 +9,10 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +37,7 @@ public class DemoApplication {
         return http
             .build();
     }
+
     @Bean
     public ApplicationRunner runner(PersonRepo repo) {
         return (args -> {
@@ -65,14 +63,7 @@ public class DemoApplication {
 
         @GetMapping("/")
         public ModelAndView index() {
-            ModelAndView mv = new ModelAndView("index");
-            setupPersonForm(mv, new PersonForm("", ""));
-            return mv;
-        }
-
-        private void setupPersonForm(ModelAndView mv, PersonForm personForm) {
-            mv.addObject("persons", repo.findAll());
-            mv.addObject("personForm", personForm);
+            return new IndexView(repo.findAll());
         }
 
         @PostMapping("/person/{personId}/items")
@@ -87,7 +78,10 @@ public class DemoApplication {
         }
 
         @DeleteMapping("/person/{personId}/items/{itemId}")
-        public ModelAndView removeListItem(@PathVariable("personId") Long personId, @PathVariable("itemId") Long itemId) {
+        public ModelAndView removeListItem(
+            @PathVariable("personId") Long personId,
+            @PathVariable("itemId") Long itemId
+        ) {
             PersonEntity personEntity = repo.findById(personId).get();
             personEntity.getItems().removeIf(i -> i.getId().equals(itemId));
             repo.save(personEntity);
@@ -98,11 +92,14 @@ public class DemoApplication {
         }
 
         @PostMapping("/person")
-        public ModelAndView createPerson(@Valid PersonForm personForm, BindingResult bindingResult, HttpServletResponse response) {
+        public ModelAndView createPerson(
+            @Valid PersonForm personForm,
+            BindingResult bindingResult,
+            HttpServletResponse response
+        ) {
             if (bindingResult.hasErrors()) {
-                ModelAndView view = new ModelAndView("person-form");
+                ModelAndView view = new PersonFormView(repo.findAll(), personForm);
                 view.setStatus(HttpStatusCode.valueOf(422));
-                setupPersonForm(view, personForm);
                 return view;
             }
             PersonEntity personEntity = new PersonEntity();
@@ -130,6 +127,23 @@ public class DemoApplication {
             String name;
             @NotBlank
             String buyingFor;
+        }
+
+        private static class IndexView extends ModelAndView {
+            public IndexView(Iterable<PersonEntity> persons) {
+                super("index");
+                this.addObject("persons", persons);
+                PersonFormView personFormView = new PersonFormView(persons, new PersonForm("", ""));
+                this.addAllObjects(personFormView.getModel());
+            }
+        }
+
+        private static class PersonFormView extends ModelAndView {
+            public PersonFormView(Iterable<PersonEntity> persons, PersonForm personForm) {
+                super("person-form");
+                this.addObject("persons", persons);
+                this.addObject("personForm", personForm);
+            }
         }
     }
 
