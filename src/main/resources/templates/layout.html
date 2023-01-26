@@ -3,11 +3,10 @@
     <title th:replace="${title}"></title>
     <meta name="csrfTokenName" th:content="${_csrf.getHeaderName()}"/>
     <meta name="csrfTokenValue" th:content="${_csrf.getToken()}"/>
-    <script src="https://unpkg.com/htmx.org@1.8.4"
-            integrity="sha384-wg5Y/JwF7VxGk4zLsJEcAojRtlVp1FKKdGy1qN+OMtdq72WRvX/EdRdqg/LOhYeV"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/htmx.org@1.8.4.js"
+            integrity="sha384-wg5Y/JwF7VxGk4zLsJEcAojRtlVp1FKKdGy1qN+OMtdq72WRvX/EdRdqg/LOhYeV"></script>
+    <script src="/tailwind-plugins-forms-typography-aspec-ratio-line-clamp.js"></script>
+    <script src="/tailwindcss.js"></script>
 </head>
 <body style="margin: 0 auto; width: 1000px" hx-boost="true"
             class="container prose prose-img:rounded-xl prose-headings prose-a:text-blue-600 ">
