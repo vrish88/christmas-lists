@@ -9,7 +9,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -33,7 +33,18 @@ public class DemoApplication {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Profile("cloud")
+    public SecurityFilterChain authFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .authorizeHttpRequests()
+            .anyRequest().authenticated().and()
+            .oauth2Login().and()
+            .build();
+    }
+
+    @Bean
+    @Profile("!cloud")
+    public SecurityFilterChain noAuthFilterChain(HttpSecurity http) throws Exception {
         return http
             .build();
     }
