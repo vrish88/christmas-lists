@@ -1,0 +1,18 @@
+---
+apiVersion: carto.run/v1alpha1
+kind: Workload
+metadata:
+  name: christmas-lists
+  labels:
+    app.kubernetes.io/part-of: mlavrisha
+    apps.tanzu.vmware.com/workload-type: web
+spec:
+  build:
+    env:
+      - name: BP_JVM_VERSION
+        value: "17"
+  source:
+    git:
+      url: https://github.com/vrish88/christmas-lists
+      ref:
+        branch: master
