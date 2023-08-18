@@ -11,13 +11,14 @@
         <ul>
             <li th:each="item : *{items}">
                 <span th:text="${item.description}"></span>
-                <button
+                <sl-button
                         hx-target="body"
-                        class="text-red-300 hover:text-red-500 px-2 py-1 text-sm rounded-full font-semibold"
+                        variant="danger"
+                        outline
                         th:attr="hx-delete=${'/person/' + person.getId() + '/items/' + item.getId()}"
                 >
                     Delete
-                </button>
+                </sl-button>
             </li>
             <li>
                 <form th:action="${'/person/' + person.getId() + '/items'}" method="post">
@@ -26,8 +27,7 @@
                         <input type="text" name="description"
                                class="rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"/>
                     </label>
-                    <input class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
-                           type="submit" value="Submit">
+                    <sl-button variant="primary" type="submit">Submit</sl-button>
                 </form>
             </li>
         </ul>
