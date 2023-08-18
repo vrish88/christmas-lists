@@ -1,11 +1,11 @@
-<html th:replace="~{layout :: layout (~{::title}, ~{::main})}" lang="en" xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{layout :: layout (~{::title}, ~{::body})}" lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Christmas Lists</title>
     <meta name="csrfTokenName" th:content="${_csrf.getHeaderName()}"/>
     <meta name="csrfTokenValue" th:content="${_csrf.getToken()}"/>
 </head>
 <body hx-boost="true">
-<main>
+<main hx-ext="restored" hx-trigger="restored" hx-get="/" hx-swap="outerHTML">
 <h1>Christmas Lists</h1>
 <h2>Create one</h2>
 <div class="error-msg"></div>
@@ -18,7 +18,6 @@
     </li>
 </ul>
 </main>
-
 <script type="application/javascript">
     const csrfHeaderName = document.querySelector("[name='csrfTokenName']").content;
     const csrfToken = document.querySelector("[name='csrfTokenValue']").content;

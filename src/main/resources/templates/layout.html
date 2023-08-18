@@ -20,12 +20,12 @@
     <script src="/tailwind-plugins-forms-typography-aspec-ratio-line-clamp.js"></script>
     <script src="/tailwindcss.js"></script>
     <script src="/htmx.ext.shoelace.js"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/restored.js"></script>
 </head>
 <body style="margin: 0 auto; width: 1000px" hx-boost="true"
       hx-ext="shoelace"
-      class="container prose prose-img:rounded-xl prose-headings prose-a:text-blue-600 ">
-<main th:insert="${content}">
-</main>
+      class="container prose prose-img:rounded-xl prose-headings prose-a:text-blue-600 "
+      th:insert="${content}">
 <script type="application/javascript">
     const csrfHeaderName = document.querySelector("[name='csrfTokenName']").content;
     const csrfToken = document.querySelector("[name='csrfTokenValue']").content;
